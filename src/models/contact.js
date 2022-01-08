@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-
-const db = process.env.DATABASE_URL;
+import { db } from "../utils/config";
 
 console.log("connecting to the db");
 

@@ -1,17 +1,3 @@
-import mongoose from "mongoose";
-import { db } from "../utils/config";
-
-console.log("connecting to the db");
-
-mongoose
-  .connect(db)
-  .then((result) => {
-    console.log("connection successful");
-  })
-  .catch((error) => {
-    console.log("connection failed:", error.message);
-  });
-
 const contactSchema = new mongoose.Schema(
   {
     email: {

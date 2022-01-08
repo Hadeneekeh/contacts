@@ -1,9 +1,9 @@
 import "dotenv/config";
 
 const PORT = process.env.PORT;
-const db = process.env.DATABASE_URL;
+const dbUrl =
+  process.env.NODE_ENV === "test"
+    ? process.env.TEST_DATABASE_URL
+    : process.env.DATABASE_URL;
 
-export {
-  db,
-  PORT,
-};
+export { dbUrl, PORT };

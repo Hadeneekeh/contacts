@@ -1,10 +1,10 @@
-import "dotenv/config";
 import express from "express";
 import cors from "cors";
 
 import { log } from "./utils/logger";
 import { PORT } from "./utils/config";
 import { logRequest, unknownEndpoint, errorHandler } from "./utils/middlewares";
+import { connect } from "./utils/db";
 
 const app = express();
 
@@ -20,6 +20,13 @@ app.get("/", (req, res) => {
 app.use(unknownEndpoint);
 app.use(errorHandler);
 
-app.listen(process.env.PORT, () =>
-  log.info(`The app is listening on port ${PORT}}!`)
-);
+const start = async () => {
+  try {
+    await connect();
+    app.listen(PORT, () => log.info(`The app is listening on port ${PORT}!`));
+  } catch (error) {
+    log.error(error);
+  }
+};
+
+start();

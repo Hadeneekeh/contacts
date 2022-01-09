@@ -1,3 +1,6 @@
+import mongoose from "mongoose";
+import mongoosePaginate from 'mongoose-paginate-v2';
+
 const contactSchema = new mongoose.Schema(
   {
     email: {
@@ -17,6 +20,9 @@ const contactSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    history: {
+      type: Array
+    }
   },
   { timestamps: true }
 );
@@ -28,6 +34,8 @@ contactSchema.set("toJSON", {
     delete returnedObject.__v;
   },
 });
+
+contactSchema.plugin(mongoosePaginate);
 
 const Contact = mongoose.model("Contact", contactSchema);
 

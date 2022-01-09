@@ -1,17 +1,5 @@
 import mongoose from "mongoose";
-
-const db = process.env.DATABASE_URL;
-
-console.log("connecting to the db");
-
-mongoose
-  .connect(db)
-  .then((result) => {
-    console.log("connection successful");
-  })
-  .catch((error) => {
-    console.log("connection failed:", error.message);
-  });
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const contactSchema = new mongoose.Schema(
   {
@@ -32,6 +20,9 @@ const contactSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    history: {
+      type: Array
+    }
   },
   { timestamps: true }
 );
@@ -43,6 +34,8 @@ contactSchema.set("toJSON", {
     delete returnedObject.__v;
   },
 });
+
+contactSchema.plugin(mongoosePaginate);
 
 const Contact = mongoose.model("Contact", contactSchema);
 

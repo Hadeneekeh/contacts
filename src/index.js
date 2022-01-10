@@ -23,12 +23,24 @@ app.use('/api', router)
 app.use(unknownEndpoint);
 app.use(errorHandler);
 
+// Another attempt to catch errors crashing the app
+
+app.use((error, req, res, next) => {
+  res.status(error.status || 500).send({
+    error: {
+      status: error.status || 500,
+      message: error.message || 'Internal Server Error',
+    },
+  });
+});
+
 const start = async () => {
   try {
     await connect();
     app.listen(PORT, () => log.info(`The app is listening on port ${PORT}!`));
   } catch (e) {
     log.error(e);
+    process.exit(1)
   }
 };
 

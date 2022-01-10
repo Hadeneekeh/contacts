@@ -2,7 +2,7 @@ import { validationResult } from "express-validator";
 import Contact from "../models/contact";
 import { log } from "../utils/logger";
 
-const getAllContact = async (req, res) => {
+const getAllContact = async (req, res, next) => {
   try {
     const contactList = await Contact.find({});
     res.status(200).json({
@@ -12,11 +12,12 @@ const getAllContact = async (req, res) => {
     });
   } catch (e) {
     log.error(e);
+    next(e);
     res.status(400).end();
   }
 };
 
-const createContact = async (req, res) => {
+const createContact = async (req, res, next) => {
   try {
     const validationError = validationResult(req);
     if (!validationError.isEmpty()) {
@@ -31,6 +32,7 @@ const createContact = async (req, res) => {
     });
   } catch (e) {
     log.error(e);
+    next(e);
     res.status(400).end();
   }
 };
@@ -43,7 +45,7 @@ const deleteContact = async (req, res, next) => {
     const contact = await Contact.findById(contactId);
 
     if (!contact) {
-      res.status(404).json({ status: 404, message: "Contact not found!" });
+     return res.status(404).json({ status: 404, message: "Contact not found!" });
     }
 
     await Contact.findByIdAndRemove(contactId);
@@ -55,7 +57,7 @@ const deleteContact = async (req, res, next) => {
   }
 };
 
-const getContact = async (req, res) => {
+const getContact = async (req, res, next) => {
   try {
     const {
       params: { contactId },
@@ -64,7 +66,9 @@ const getContact = async (req, res) => {
     const contact = await Contact.findById(contactId);
 
     if (!contact) {
-      res.status(404).json({ status: 404, message: "Contact not found!" });
+      return res
+        .status(404)
+        .json({ status: 404, message: "Contact not found!" });
     }
 
     res.status(200).json({
